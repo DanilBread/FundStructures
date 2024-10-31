@@ -16,6 +16,30 @@ class List {
 private:
     Node* root;
 
+    void delete_next_element(Node * prev){
+        if (root == nullptr) throw std::logic_error("delete element from empty list");
+
+        if (prev -> next == root){
+            if (root -> next == root)
+            {
+                delete root;
+                root = nullptr;
+                return;
+            }
+
+            prev->next = root -> next;
+            delete root;
+            root = prev -> next;
+        }
+
+        else 
+        {
+            Node* to_delete = prev -> next;
+            prev -> next = prev -> next -> next;
+            delete to_delete;
+        }
+    }
+
 public:
     // Конструктор для инициализации списка
     List() {
@@ -80,102 +104,39 @@ public:
     }
 
     // Метод для удаления всех вхождений заданного элемента
-    void delete_all(int value) {
-        if (root == nullptr) return;
-
+    void deleteByValue(int value) {
+    if (root == nullptr) return;
         Node* current = root;
-        Node* prev = nullptr;
-        
-        do {
-            if (current -> data == value) {
-                if (prev == nullptr) { 
-                    if (current->next == root) { 
-                        delete current;
-                        root = nullptr;
-                        return;
-                    } else { 
-                        Node* last = root;
-
-                        while (last -> next != root) {
-                            last = last -> next; 
-                        }
-                        last -> next = current -> next; 
-                        delete current; 
-                        root = last -> next; 
-                        current = last -> next; 
-                    }
-                } else {
-                    prev -> next = current -> next; 
-                    delete current; 
-                    current = prev -> next; 
-                }
-            } else {
-                prev = current; 
-                current = current -> next; 
+        while (current -> next != root){
+            if (current -> next -> data == value){
+                delete_next_element(current);
             }
-        } while (current != root);
+            else current = current -> next;
+        }
+        if (root -> data == value){
+            delete_next_element(current);
+        }
     }
 
     //метод для удаления элементов после каждого вхождения заданного 
-    void delete_after(int value) {
-        if (root == nullptr) {
-            return; 
-        }
+        void deleteAfterValue(int value) {
+        if (root == nullptr) return;
 
-        int count = find(value); 
-
-        if (count == 0) {
-            return; 
-        }
-
-        if (count == 1) {
-            Node* current = root;
-            do {
-                if (current -> data == value) {
-                    if (current -> next != root) { 
-                        Node* to_delete = current -> next; 
-                        current -> next = to_delete -> next; 
-                        delete to_delete; 
-                    }
-                    return; 
+        Node* current = root;
+        do{
+            if (current -> data == value){
+                Node* to_delete = current -> next;
+                if (to_delete != root){
+                    current -> next = to_delete -> next;
+                    delete to_delete;
                 }
-                current = current -> next;
-            } while (current != root);
-        }
-
-        if (count >= 2) {
-            Node* current = root;
-            Node* last = nullptr;
-
-            do {
-                if (current -> data == value) {
-                    last = current; 
-                }
-                current = current -> next; 
-            } while (current != root);
-
-            if (last -> next != last) { 
-                Node* to_delete = last -> next;
-                last -> next = to_delete -> next; 
-                delete to_delete; 
             }
-
-            do {
-                current = root;
-                do {
-                    Node* to_delete = current -> next;
-                    if (current -> data == value && to_delete -> data == value){
-                        current -> next = to_delete -> next;
-                        delete to_delete;
-                    } 
-                } while(current != root);
-                count--;
-            } while (count != 1);
-        }
+            current = current -> next;
+        } while (current != root);
     }
 
     // Метод для поиска элемента по значению
-    int find(int value) const{
+    int SearchByValue(int value) const{
         if (root == nullptr) {
             cout << "\nnot a single occurrence "<< value << " was found";
             return 0;
@@ -189,7 +150,7 @@ public:
                 count++;
             current = current -> next;
         } while (current != root);
-        cout << "\n" << count << "occurrences with a value of " << value << " were found";
+        cout << "\n" << count << " occurrences with a value of " << value << " were found";
         return count;
     }
 
@@ -356,13 +317,13 @@ int main() {
                 if (input_list == 1) 
                 {
                     cout << "\nbefore - list_" << input_list << ": "; list1.print();
-                    list1.delete_all(input_value);
+                    list1.deleteByValue(input_value);
                     cout << "\nafter - list_" << input_list << ": "; list1.print();
                 } 
                 else 
                 {
                     cout << "\nbefore - list_" << input_list << ": "; list2.print();
-                    list2.delete_all(input_value);
+                    list2.deleteByValue(input_value);
                     cout << "\nafter - list_" << input_list << ": "; list2.print();
                 }
                 break;
@@ -375,13 +336,13 @@ int main() {
                 if (input_list == 1) 
                 {
                     cout << "\nbefore - list_" << input_list << ": "; list1.print();
-                    list1.delete_after(input_value);
+                    list1.deleteAfterValue(input_value);
                     cout << "\nafter - list_" << input_list << ": "; list1.print();
                 } 
                 else 
                 {
                     cout << "\nbefore - list_" << input_list << ": "; list2.print();
-                    list2.delete_after(input_value);
+                    list2.deleteAfterValue(input_value);
                     cout << "\nafter - list_" << input_list << ": "; list2.print();
                 }
                 break;  
@@ -394,12 +355,12 @@ int main() {
                 if (input_list == 1) 
                 {
                     cout << "\nlist_" << input_list << ": "; list1.print();
-                    list1.find(input_value);
+                    list1.SearchByValue(input_value);
                 } 
                 else 
                 {
                     cout << "\nlist_" << input_list << ": "; list2.print();
-                    list2.find(input_value);
+                    list2.SearchByValue(input_value);
                 }
                 break;
             } 
