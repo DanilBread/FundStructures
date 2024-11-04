@@ -207,7 +207,10 @@ public:
                 if (curr1 -> data > curr2 -> data)
                 {
                     result.add(curr1 -> data);
-                    curr1 = curr1 -> next;
+                    int value = curr1 -> data;
+                    do {
+                        curr1 = curr1 -> next;
+                    } while(curr1 -> data == value);
                     if (curr1 == this -> root)
                     {
                         break;
@@ -216,7 +219,10 @@ public:
                 else if (curr1 -> data < curr2 -> data)
                 {
                     result.add(curr2 -> data);
-                    curr2 = curr2 -> next;
+                    int value = curr2 -> data;
+                    do {
+                        curr2 = curr2 -> next;
+                    } while (curr2 -> data == value);
                     if (curr2 == other.root)
                     {
                         break;
