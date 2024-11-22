@@ -16,7 +16,7 @@ class List {
 private:
     Node* root;
 
-    void delete_next_element(Node * prev){
+    void delete_next_element(Node* prev){
         if (root == nullptr) throw std::logic_error("delete element from empty list");
 
         if (prev -> next == root){
@@ -125,11 +125,16 @@ public:
         Node* current = root;
         do{
             if (current -> data == value){
-                Node* to_delete = current -> next;
-                if (to_delete != root){
-                    current -> next = to_delete -> next;
-                    delete to_delete;
-                }
+                delete_next_element(current);
+                // Node* to_delete = current -> next;
+                // if (to_delete != root){
+                //     current -> next = to_delete -> next;
+                //     delete to_delete;
+                // }
+                // else 
+                // {
+
+                // }
             }
             current = current -> next;
         } while (current != root);
@@ -390,8 +395,8 @@ int main() {
             case 6: 
             {
                 cout << "You have selected the symmetric difference between lists 1 and 2\n";
-                cout << "\nlist_" << input_list << ": "; list1.print();
-                cout << "\nlist_" << input_list << ": "; list2.print();
+                cout << "\nlist_1: "; list1.print();
+                cout << "\nlist_2: "; list2.print();
                 List difference_list = list1.symmetric_difference(list2);
                 cout << "\ndifference_list: "; difference_list.print();
                 break;
