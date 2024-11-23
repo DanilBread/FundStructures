@@ -40,6 +40,16 @@ private:
         }
     }
 
+    bool is_prime(int num) {
+        if (num == 1 || num == 0) return false; 
+        
+        for (int i = 2; i * i <= num; i++) 
+        {
+            if (num % i == 0) return false; 
+        }
+        return true; 
+    }
+
 public:
     // Конструктор для инициализации списка
     List() {
@@ -126,15 +136,6 @@ public:
         do{
             if (current -> data == value){
                 delete_next_element(current);
-                // Node* to_delete = current -> next;
-                // if (to_delete != root){
-                //     current -> next = to_delete -> next;
-                //     delete to_delete;
-                // }
-                // else 
-                // {
-
-                // }
             }
             current = current -> next;
         } while (current != root);
@@ -271,7 +272,32 @@ public:
             }
             return result;
         }
-    }   
+    }  
+
+   
+    List create_prime_list() {
+        List prime_list; 
+        Node* current = root;
+
+        if (root == nullptr) return prime_list;
+
+        do {
+            int value = current->data; 
+            int prime_value = -1; 
+
+            for (int i = value - 1; i > 1; i--) { 
+                if (is_prime(i)) {
+                    prime_value = i; 
+                    break; 
+                }
+            }
+
+            prime_list.add(prime_value); 
+            current = current->next; 
+        } while (current != root);
+
+        return prime_list; 
+    } 
 };
 
 
@@ -289,7 +315,8 @@ int main() {
         cout << "4: Searching for an element by value\n";
         cout << "5: Print\n";
         cout << "6: Symmetric difference\n";
-        cout << "7: Shutdown\n";
+        cout << "7: Prime list\n";
+        cout << "8: Shutdown\n";
         cout << "Your choice: "; cin >> input_choice; cout << "\n";
         switch(input_choice)
         {
@@ -402,7 +429,25 @@ int main() {
                 break;
             }
             
-            case 7: 
+            case 7:
+            {
+                cout << "You have selected create the Prime_list from list_" << input_list;
+                if (input_list == 1) 
+                {
+                    cout << "\nlist_1: "; list1.print();
+                    List prime_list = list1.create_prime_list();
+                    cout << "\prime_list: "; prime_list.print();
+                } 
+                else 
+                {
+                    cout << "\nlist_2: "; list2.print();
+                    List prime_list = list2.create_prime_list();
+                    cout << "\prime_list: "; prime_list.print();
+                } 
+                break;
+            }
+
+            case 8: 
             {
                 cout << "turning off the program\n";
                 break;
