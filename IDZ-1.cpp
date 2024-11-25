@@ -16,7 +16,7 @@ class List {
 private:
     Node* root;
 
-    void delete_next_element(Node* prev){
+    void DeleteNextElement(Node* prev){
         if (root == nullptr) throw std::logic_error("delete element from empty list");
 
         if (prev -> next == root){
@@ -58,11 +58,11 @@ public:
 
     // Деструктор для освобождения памяти
     ~List() {
-        clear();
+        Clear();
     }
 
     // Метод для освобождения памяти
-    void clear() {
+    void Clear() {
         if (root == nullptr) return;
 
         Node* current = root->next;
@@ -78,7 +78,7 @@ public:
     }
 
     // Метод для добавления элемента в упорядоченный список по убыванию
-    void add(int value) {
+    void Add(int value) {
         Node* new_node = new Node(value, nullptr);
         
         if (root == nullptr) {
@@ -114,28 +114,28 @@ public:
     }
 
     // Метод для удаления всех вхождений заданного элемента
-    void deleteByValue(int value) {
+    void DeleteByValue(int value) {
     if (root == nullptr) return;
         Node* current = root;
         while (current -> next != root){
             if (current -> next -> data == value){
-                delete_next_element(current);
+                DeleteNextElement(current);
             }
             else current = current -> next;
         }
         if (root -> data == value){
-            delete_next_element(current);
+            DeleteNextElement(current);
         }
     }
 
     //метод для удаления элементов после каждого вхождения заданного 
-        void deleteAfterValue(int value) {
+        void DeleteAfterValue(int value) {
         if (root == nullptr) return;
 
         Node* current = root;
         do{
             if (current -> data == value){
-                delete_next_element(current);
+                DeleteNextElement(current);
             }
             current = current -> next;
         } while (current != root);
@@ -144,7 +144,7 @@ public:
     // Метод для поиска элемента по значению
     int SearchByValue(int value) const{
         if (root == nullptr) {
-            cout << "\nnot a single occurrence "<< value << " was found";
+            cout << "\nEmpty list!";
             return 0;
         }
 
@@ -161,7 +161,7 @@ public:
     }
 
     // Метод для печати элементов списка
-    void print() const {
+    void Print() const {
         if (root == nullptr) {
             cout << "list empty\n";
             return;
@@ -178,7 +178,7 @@ public:
     }
 
     // Метод для симметрической разности двух списков
-    List symmetric_difference(const List& other) const
+    List SymmetricDifference(const List& other) const
     {
         List result;
         Node* curr1 = this -> root;
@@ -192,7 +192,7 @@ public:
         else if (curr1 == nullptr)
         {
             do {
-                result.add(curr2 -> data);
+                result.Add(curr2 -> data);
                 curr2 = curr2 -> next;
             } while (curr2 != other.root);
             return result;
@@ -201,7 +201,7 @@ public:
         else if (curr2 == nullptr)
         {
             do {
-                result.add(curr1 -> data);
+                result.Add(curr1 -> data);
                 curr1 = curr1 -> next;
             } while (curr1 != this -> root);
             return result;
@@ -212,7 +212,7 @@ public:
             do {
                 if (curr1 -> data > curr2 -> data)
                 {
-                    result.add(curr1 -> data);
+                    result.Add(curr1 -> data);
                     int value = curr1 -> data;
                     do {
                         curr1 = curr1 -> next;
@@ -224,7 +224,7 @@ public:
                 }
                 else if (curr1 -> data < curr2 -> data)
                 {
-                    result.add(curr2 -> data);
+                    result.Add(curr2 -> data);
                     int value = curr2 -> data;
                     do {
                         curr2 = curr2 -> next;
@@ -257,7 +257,7 @@ public:
             (curr1 == this -> root && curr1 -> next == this -> root && curr2 == other.root))
             {
                 do {
-                    result.add(curr1 -> data);
+                    result.Add(curr1 -> data);
                     curr1 = curr1 -> next;
                 } while (curr1 != this -> root);
             }
@@ -266,7 +266,7 @@ public:
             (curr2 == other.root && curr2 -> next == other.root && curr1 == this -> root))
             {
                 do {
-                    result.add(curr2 -> data);
+                    result.Add(curr2 -> data);
                     curr2 = curr2 -> next;
                 } while (curr2 != other.root);
             }
@@ -275,7 +275,7 @@ public:
     }  
 
    
-    List create_prime_list() {
+    List CreatePrimeList() {
         List prime_list; 
         Node* current = root;
 
@@ -292,7 +292,7 @@ public:
                 }
             }
 
-            prime_list.add(prime_value); 
+            prime_list.Add(prime_value); 
             current = current->next; 
         } while (current != root);
 
@@ -325,25 +325,25 @@ int main() {
                 cout << "You have selected Additions in descending order to the list_" << input_list << "\n";
                 if (input_list == 1) 
                 {
-                    cout << "\nbefore - list_" << input_list << ": "; list1.print();
+                    cout << "\nbefore - list_" << input_list << ": "; list1.Print();
                     int quantity;
-                    cout << "Enter the number of items to add: "; cin >> quantity;
+                    cout << "Enter the number of items to Add: "; cin >> quantity;
                     for (int i = 0; i < quantity; i++){
                         cout << "\nEnter value: (" << i+1 << "): "; cin >> input_value;
-                        list1.add(input_value);
+                        list1.Add(input_value);
                     }
-                    cout << "\nafter - list_" << input_list << ": "; list1.print();
+                    cout << "\nafter - list_" << input_list << ": "; list1.Print();
                 } 
                 else 
                 {
-                    cout << "\nbefore - list_" << input_list << ": "; list2.print();
+                    cout << "\nbefore - list_" << input_list << ": "; list2.Print();
                     int quantity;
-                    cout << "Enter the number of items to add: "; cin >> quantity;
+                    cout << "Enter the number of items to Add: "; cin >> quantity;
                     for (int i = 0; i < quantity; i++){
                         cout << "\nEneter value (" << i+1 << "): "; cin >> input_value;
-                        list2.add(input_value);
+                        list2.Add(input_value);
                     }
-                    cout << "\nafter - list_" << input_list << ": "; list2.print();
+                    cout << "\nafter - list_" << input_list << ": "; list2.Print();
                 }
                 break;
             } 
@@ -354,15 +354,15 @@ int main() {
                 cout << "\nEneter value: "; cin >> input_value; cout << "\n";
                 if (input_list == 1) 
                 {
-                    cout << "\nbefore - list_" << input_list << ": "; list1.print();
-                    list1.deleteByValue(input_value);
-                    cout << "\nafter - list_" << input_list << ": "; list1.print();
+                    cout << "\nbefore - list_" << input_list << ": "; list1.Print();
+                    list1.DeleteByValue(input_value);
+                    cout << "\nafter - list_" << input_list << ": "; list1.Print();
                 } 
                 else 
                 {
-                    cout << "\nbefore - list_" << input_list << ": "; list2.print();
-                    list2.deleteByValue(input_value);
-                    cout << "\nafter - list_" << input_list << ": "; list2.print();
+                    cout << "\nbefore - list_" << input_list << ": "; list2.Print();
+                    list2.DeleteByValue(input_value);
+                    cout << "\nafter - list_" << input_list << ": "; list2.Print();
                 }
                 break;
             } 
@@ -373,15 +373,15 @@ int main() {
                 cout << "\nEneter value: "; cin >> input_value; cout << "\n";
                 if (input_list == 1) 
                 {
-                    cout << "\nbefore - list_" << input_list << ": "; list1.print();
-                    list1.deleteAfterValue(input_value);
-                    cout << "\nafter - list_" << input_list << ": "; list1.print();
+                    cout << "\nbefore - list_" << input_list << ": "; list1.Print();
+                    list1.DeleteAfterValue(input_value);
+                    cout << "\nafter - list_" << input_list << ": "; list1.Print();
                 } 
                 else 
                 {
-                    cout << "\nbefore - list_" << input_list << ": "; list2.print();
-                    list2.deleteAfterValue(input_value);
-                    cout << "\nafter - list_" << input_list << ": "; list2.print();
+                    cout << "\nbefore - list_" << input_list << ": "; list2.Print();
+                    list2.DeleteAfterValue(input_value);
+                    cout << "\nafter - list_" << input_list << ": "; list2.Print();
                 }
                 break;  
             } 
@@ -392,12 +392,12 @@ int main() {
                 cout << "\nEneter value: "; cin >> input_value;
                 if (input_list == 1) 
                 {
-                    cout << "\nlist_" << input_list << ": "; list1.print();
+                    cout << "\nlist_" << input_list << ": "; list1.Print();
                     list1.SearchByValue(input_value);
                 } 
                 else 
                 {
-                    cout << "\nlist_" << input_list << ": "; list2.print();
+                    cout << "\nlist_" << input_list << ": "; list2.Print();
                     list2.SearchByValue(input_value);
                 }
                 break;
@@ -409,12 +409,12 @@ int main() {
                 if (input_list == 1) 
                 {
                     cout << "\nlist_1: ";
-                    list1.print();
+                    list1.Print();
                 } 
                 else 
                 {
                     cout << "\nlist_2: ";
-                    list2.print();
+                    list2.Print();
                 } 
                 break;
             } 
@@ -422,10 +422,10 @@ int main() {
             case 6: 
             {
                 cout << "You have selected the symmetric difference between lists 1 and 2\n";
-                cout << "\nlist_1: "; list1.print();
-                cout << "\nlist_2: "; list2.print();
-                List difference_list = list1.symmetric_difference(list2);
-                cout << "\ndifference_list: "; difference_list.print();
+                cout << "\nlist_1: "; list1.Print();
+                cout << "\nlist_2: "; list2.Print();
+                List difference_list = list1.SymmetricDifference(list2);
+                cout << "\ndifference_list: "; difference_list.Print();
                 break;
             }
             
@@ -434,15 +434,15 @@ int main() {
                 cout << "You have selected create the Prime_list from list_" << input_list;
                 if (input_list == 1) 
                 {
-                    cout << "\nlist_1: "; list1.print();
-                    List prime_list = list1.create_prime_list();
-                    cout << "\prime_list: "; prime_list.print();
+                    cout << "\nlist_1: "; list1.Print();
+                    List prime_list = list1.CreatePrimeList();
+                    cout << "\prime_list: "; prime_list.Print();
                 } 
                 else 
                 {
-                    cout << "\nlist_2: "; list2.print();
-                    List prime_list = list2.create_prime_list();
-                    cout << "\prime_list: "; prime_list.print();
+                    cout << "\nlist_2: "; list2.Print();
+                    List prime_list = list2.CreatePrimeList();
+                    cout << "\prime_list: "; prime_list.Print();
                 } 
                 break;
             }
