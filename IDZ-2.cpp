@@ -5,39 +5,40 @@
 
 using namespace std;
 
-//////////////////ВСПОМОГАТЕЛЬНЫЕ///////////////////
-bool isString(const string& inString)
+//Вспомогательные для проверок 
+bool isString(const string& inputString)
 {
-    for (int i = 0; i < inString.length(); i++)
-    {
-        if (!isalpha(inString[i]))
-        {
-            return false;
-        }
-        if (!isupper(inString[0]))
-        {
-            return false;
-        }
-        if ((i != 0) && !islower(inString[i]))
-        {
-            return false;
-        }
-    }
-    if (inString.length() <= 1)
+    if (!(isupper(inputString[0]) && isalpha(inputString[0])))
     {
         return false;
     }
-    return !inString.empty();
+    if (inputString.length() <= 1)
+    {
+        return false;
+    }
+    for (int i = 1; i < inputString.length(); i++)
+    {
+        if (!isalpha(inputString[i]))
+        {
+            return false;
+        }
+        if (!islower(inputString[i]))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
-bool isGosNumber(const string& inString)
+bool isGosNumber(const string& inputString)
 {
-    if (inString.length() != 10)
+    if (inputString.length() != 10)
     {
         return false;
     }
     
-    for (char ch : inString)
+    for (char ch : inputString)
     {
         if (!isdigit(ch))
         {
@@ -46,21 +47,19 @@ bool isGosNumber(const string& inString)
 
     }
 
-    return !inString.empty();
+    return true;
 }
 
 void cinError()
 {
-    if (std::cin.fail())
+    if (cin.fail())
     {
-        std::cin.clear();
-        std::cin.ignore(100, '\n');
+        cin.clear();
+        cin.ignore(100, '\n');
     }
 }
 
-////////////////////////////////////////////////////
-
-////////Односвязный кольцевой список повторов////////
+//Односвязный кольцевой список повторов
 
 struct Node {
     int data;
@@ -80,23 +79,23 @@ private:
     void DeleteNextElement(Node* prev){
         if (head == nullptr) throw logic_error("delete element from empty list");
 
-        if (prev  ->  next == head){
-            if (head  ->  next == head)
+        if (prev -> next == head){
+            if (head -> next == head)
             {
                 delete head;
                 head = nullptr;
                 return;
             }
 
-            prev -> next = head  ->  next;
+            prev -> next = head -> next;
             delete head;
-            head = prev  ->  next;
+            head = prev -> next;
         }
 
         else 
         {
-            Node* to_delete = prev  ->  next;
-            prev  ->  next = prev  ->  next  ->  next;
+            Node* to_delete = prev -> next;
+            prev  ->  next = prev -> next -> next;
             delete to_delete;
         }
     }
@@ -118,7 +117,8 @@ public:
         Node* prev = nullptr;
 
         do {
-            if (current  ->  data < value) {
+            if (current  ->  data < value) 
+            {
                 break; 
             }
             prev = current;
@@ -129,7 +129,8 @@ public:
             new_node  ->  next = head;
             Node* last = head;
 
-            while (last  ->  next != head) {
+            while (last  ->  next != head) 
+            {
                 last = last -> next;
             }
             last -> next = new_node; 
@@ -168,28 +169,45 @@ public:
         int count = 1;
 
         Node* temp = head;
-        while (temp  ->  next != head) {
-            temp = temp  ->  next;
+        while (temp -> next != head) {
+            temp = temp -> next;
             count++;
         }
         return count;
     }
 
-    // Функция возвращающая голову
+    // Метод для печати элементов списка
+    void Print() const {
+        if (head == nullptr) {
+            cout << "list empty\n";
+            return;
+        }
+
+        Node* current = head;
+
+        do
+        {
+            cout << current -> data << " ";
+            current = current -> next;
+        } while (current != head);
+        
+        cout << endl;
+    }
+
+    // Функция возвращающая голову списка
     Node* getHead()
     {
         return head;
     }
 
-    // Функция возвращающая дату
+    // Функция возвращающая дату из списка
     int getData()
     {
-        return head  ->  data;
+        return head -> data;
     }
 };
-////////////////////////////////////////////////////
 
-//////////////////АВЛ ДЕРЕВО////////////////////////
+//АВЛ дерево
 
 // Структура ключа дерева
 struct treeData
@@ -248,7 +266,7 @@ struct AVLTree
 };
 
 // Добавление элемента по Вирту
-void add(AVLTree*& root,const treeData& key, bool& h, int& value) 
+void add(AVLTree*& root,const treeData& key, bool& height, int& value) 
 {
     AVLTree *p1, *p2;
 
@@ -256,17 +274,17 @@ void add(AVLTree*& root,const treeData& key, bool& h, int& value)
     if (root == nullptr)
     {
         root = new AVLTree(key,value);
-        h = true;
+        height = true;
     }
     else if (key < root -> key) 
     {
-        add(root -> left, key, h, value);
-        if (h) // Выросла левая ветвь
+        add(root -> left, key, height, value);
+        if (height) // Выросла левая ветвь
         { 
             if (root -> balanceFactor == 1) 
             {
                 root -> balanceFactor = 0;
-                h = false;
+                height = false;
             }
             else if (root -> balanceFactor == 0) 
             {
@@ -308,20 +326,20 @@ void add(AVLTree*& root,const treeData& key, bool& h, int& value)
                     root = p2;
                 }
                 root -> balanceFactor = 0;
-                h = false;
+                height = false;
             }
         }
     }
     else if (root -> key < key) 
     {
-        add(root -> right,key, h, value);
+        add(root -> right,key, height, value);
 
-        if (h) // Выросла правая ветвь
+        if (height) // Выросла правая ветвь
         { 
             if (root -> balanceFactor == -1) 
             {
                 root -> balanceFactor = 0;
-                h = false;
+                height = false;
             }
             else if (root -> balanceFactor == 0) 
             {
@@ -363,19 +381,19 @@ void add(AVLTree*& root,const treeData& key, bool& h, int& value)
                     root = p2;
                 }
                 root -> balanceFactor = 0;
-                h = false;
+                height = false;
             }
         }
     }
     else if (root -> key == key) // Ключ уже существует
     {
         root -> currList.add(value);
-        h = false;
+        height = false;
     }
 }
 
 // Балансировка левого поддерева по Вирту
-void balanceLeft(AVLTree*& root, bool& h)
+void balanceLeft(AVLTree*& root, bool& height)
 {
     AVLTree *p1, *p2;
 
@@ -386,7 +404,7 @@ void balanceLeft(AVLTree*& root, bool& h)
     else if (root -> balanceFactor == 0)
     {
         root -> balanceFactor = 1; 
-        h = false;
+        height = false;
     }
     else // Восстановление баланса
     {
@@ -399,7 +417,7 @@ void balanceLeft(AVLTree*& root, bool& h)
             {
                 root -> balanceFactor = 1;
                 p1 -> balanceFactor = -1;
-                h = false;
+                height = false;
             }
             else
             {
@@ -438,7 +456,7 @@ void balanceLeft(AVLTree*& root, bool& h)
 }
 
 // Балансировка правого поддерева по Вирту
-void balanceRight(AVLTree*& root, bool& h)
+void balanceRight(AVLTree*& root, bool& height)
 {
     AVLTree* p1, * p2;
 
@@ -449,7 +467,7 @@ void balanceRight(AVLTree*& root, bool& h)
     else if (root -> balanceFactor == 0)
     {
         root -> balanceFactor = -1;
-        h = false;
+        height = false;
     }
     else // Восстановление баланса
     {
@@ -462,7 +480,7 @@ void balanceRight(AVLTree*& root, bool& h)
             {
                 root -> balanceFactor = -1;
                 p1 -> balanceFactor = 1;
-                h = false;
+                height = false;
             }
             else
             {
@@ -501,15 +519,15 @@ void balanceRight(AVLTree*& root, bool& h)
 }
 
 // Функция поиска наибольшего слева элемента по Вирту
-AVLTree* del(AVLTree*& root, bool& h)
+AVLTree* findMax(AVLTree*& root, bool& height)
 {
 
     if (root -> right != nullptr) 
     {
-        AVLTree* r = del(root -> right, h);
-        if (h) 
+        AVLTree* r = findMax(root -> right, height);
+        if (height) 
         {
-            balanceRight(root, h);
+            balanceRight(root, height);
         }
         return r;
     }
@@ -518,13 +536,13 @@ AVLTree* del(AVLTree*& root, bool& h)
         AVLTree* q;
         q = root;
         root = root -> left;
-        h = true;
+        height = true;
         return q;
     }
 }
 
 // Функция удаления узла по Вирту
-void deleteNode(AVLTree*& root,const treeData& key, bool& h)
+void deleteNode(AVLTree*& root,const treeData& key, bool& height)
 {
     if (root == nullptr)
     {
@@ -535,20 +553,20 @@ void deleteNode(AVLTree*& root,const treeData& key, bool& h)
 
     if (key < root -> key)
     {
-        deleteNode(root -> left, key, h);
+        deleteNode(root -> left, key, height);
         {
-            if (h)
+            if (height)
             {
-                balanceLeft(root, h);
+                balanceLeft(root, height);
             }
         }
     }
     else if (root -> key < key)
     {
-        deleteNode(root -> right, key, h);
-        if (h)
+        deleteNode(root -> right, key, height);
+        if (height)
         {
-            balanceRight(root, h);
+            balanceRight(root, height);
         }
     }
     else
@@ -562,21 +580,21 @@ void deleteNode(AVLTree*& root,const treeData& key, bool& h)
         if (root -> right == nullptr)
         {
             root = root -> left;
-            h = true;
+            height = true;
         }
         else if (root -> left == nullptr)
         {
             root = root -> right;
-            h = true;
+            height = true;
         }
         else
         {   
-            q = del(root -> left, h);
+            q = findMax(root -> left, height);
             root -> key = q -> key;
             root -> currList = q -> currList;
-            if (h)
+            if (height)
             {
-                balanceLeft(root, h);
+                balanceLeft(root, height);
             }
         }
     }
@@ -621,27 +639,27 @@ void clearTree(AVLTree*& root, int& value)
 }
 
 // Проверка входных данных
-bool stringCheck(treeData& curr)
+bool stringCheck(treeData& tree)
 {
-    if (curr.name.length() <= 1 || curr.surname.length() <= 1
-        || curr.patronymic.length() <= 1 || curr.gosNumber.length() != 10)
+    if (tree.name.length() <= 1 || tree.surname.length() <= 1
+        || tree.patronymic.length() <= 1 || tree.gosNumber.length() != 10)
     {
         return false;
     }
-    if (!isString(curr.name))
+    if (!isString(tree.name))
     {
         return false;
     }
-    if (!isString(curr.surname))
+    if (!isString(tree.surname))
     {
         return false;
     }
-    if (!isString(curr.patronymic))
+    if (!isString(tree.patronymic))
     {
         return false;
     }
 
-    if (!isGosNumber(curr.gosNumber))
+    if (!isGosNumber(tree.gosNumber))
     {
         return false;
     }
@@ -649,27 +667,25 @@ bool stringCheck(treeData& curr)
 }
 
 // Получение данных из файла
-void ImportFile(AVLTree*& root, const string& filename, int& value, bool& h)
+void ImportFile(AVLTree*& root, const string& filename, int& value, bool& height)
 {
     ifstream input(filename);
     if (!input.is_open())
     {
-        cout << "                    ###                    \n";
-        cout << "ОШИБКА!!! Файл не может быть открыт!" << endl;
-        cout << "                    ###                    \n\n";
+        cout << "\n !!!ОШИБКА!!! Файл не может быть открыт!\n\n";
         return;
     }
 
-    string curr;
+    string current;
 
-    while (getline(input, curr))
+    while (getline(input, current))
     {
-        istringstream currLine(curr);
+        istringstream currLine(current);
         treeData data;
         currLine >> data.surname >> data.name >> data.patronymic >> data.gosNumber;
         if (stringCheck(data))
         {
-            add(root, data, h, ++value);
+            add(root, data, height, ++value);
         }
         else
         {
@@ -703,7 +719,7 @@ void ExportFile(AVLTree*& root, ofstream& file_output)
         temp = temp -> next;
     } while (temp != root -> currList.getHead());
 
-    file_output << root -> key.surname << " " << root -> key.name << " " << root -> key.patronymic << " " << root -> key.gosNumber << endl;
+    file_output << root -> key.surname << " " << root -> key.name << " " << root -> key.patronymic << " " << root -> key.gosNumber << "\n";
 
     ExportFile(root -> right, file_output);
 }
@@ -725,9 +741,7 @@ treeData createKey()
         }
         else
         {
-            cout << "                    ###                    \n";
-            cout << "ОШИБКА!!! Некорректная Фамилия!\n";
-            cout << "                    ###                    \n\n";
+            cout << "\n!!! ОШИБКА !!!  Некорректная Фамилия!\n\n";
         }
     }
 
@@ -743,9 +757,7 @@ treeData createKey()
         }
         else
         {
-            cout << "                    ###                    \n";
-            cout << "ОШИБКА!!! Неккоректное Имя!\n";
-            cout << "                    ###                    \n\n";
+            cout << "\n !!!ОШИБКА!!! Неккоректное Имя!\n\n";
         }
     }
 
@@ -761,9 +773,7 @@ treeData createKey()
         }
         else
         {
-            cout << "                    ###                    \n";
-            cout << "Ошибка!!! Некорректное Отчество!\n";
-            cout << "                    ###                    \n\n";
+            cout << "\n !!!Ошибка!!! Некорректное Отчество!\n\n";
         }
     }
 
@@ -779,9 +789,7 @@ treeData createKey()
         }
         else 
         {
-            cout << "                    ###                    \n";
-            cout << "ОШИБКА!!! Некорректный Госномер!\n";
-            cout << "                    ###                    \n\n";
+            cout << "\n !!!ОШИБКА!!! Некорректный Госномер!\n";
         }
     }
     return key;
@@ -797,10 +805,10 @@ void rightLeftOrder(AVLTree*& root, ofstream& file)
 
     rightLeftOrder(root -> right, file);
 
-    cout << root -> key.surname << " " << root -> key.name << " " << root -> key.patronymic << " # "
+    cout << root -> key.surname << " " << root -> key.name << " " << root -> key.patronymic << " #"
         << root -> key.gosNumber << endl;
 
-    file << root -> key.surname << " " << root -> key.name << " " << root -> key.patronymic << " # "
+    file << root -> key.surname << " " << root -> key.name << " " << root -> key.patronymic << " #"
         << root -> key.gosNumber << endl;
 
     rightLeftOrder(root -> left, file);
@@ -825,7 +833,7 @@ void printTreeHelper(AVLTree* root, int indent = 0)
 
 
         cout << root -> key.surname << " " << root -> key.name
-            << " " << root -> key.patronymic << " #" << root -> key.gosNumber << " | (" << root -> balanceFactor << ") [";
+            << " " << root -> key.patronymic << " #" << root -> key.gosNumber << " | (" << root -> balanceFactor << ") | [";
 
         do
         {
@@ -864,7 +872,7 @@ int main()
     ofstream output;
     output.open("output.txt");
     int answer = 0;
-    bool h;
+    bool height;
     string filename = "C:\\Users\\godzi\\projects\\FundStructures\\input.txt";
     AVLTree* root = nullptr;
     int value = 0;
@@ -891,15 +899,15 @@ int main()
         case 1:
         {
             value++;
-            add(root, createKey(), h, value);
+            add(root, createKey(), height, value);
             cout << endl;
             break;
         }
         case 2:
         {
-            cout << "___________________________________________________\n";
-            cout << "| Фамилия Имя Отчество Госномер (Баланс) [Строки] |\n";
-            cout << "---------------------------------------------------\n";
+            cout << "__________________________________________________________________________\n";
+            cout << "| Фамилия Имя Отчество Госномер (Баланс узла) [Строки в списке повторов] |\n";
+            cout << "--------------------------------------------------------------------------\n";
             cout << "                   Дерево: \n\n";
             printTree(root);
             cout << "\n";
@@ -913,14 +921,14 @@ int main()
         }
         case 4:
         {
-            deleteNode(root, createKey(), h);
+            deleteNode(root, createKey(), height);
             cout << "\n";
             break;
         }
         case 5:
         {
             cout << "Данные из файла успешно имортированы!\n\n";
-            ImportFile(root, filename, value, h);
+            ImportFile(root, filename, value, height);
             cout << "\n";
             break;
         }
@@ -949,15 +957,13 @@ int main()
         }
         case 9:
         {
-            cout << "Программа завершила работу!\n";
+            cout << "\nПрограмма завершила работу!\n";
             break;
         }
         default:
         {
             cinError();
-            cout << "\n                  ###                    \n";
-            cout << "ОШИБКА! Некорректный ввод!\n";
-            cout << "                    ###                    \n\n";
+            cout << "\n !!!ОШИБКА! Некорректный ввод!\n\n";
             break;
 
         }
